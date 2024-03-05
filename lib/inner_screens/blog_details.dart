@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:blog_app/providers/news_provider.dart';
+import 'package:blog_app/services/global_methods.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -6,6 +8,8 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:blog_app/consts/vars.dart';
 import 'package:blog_app/widgets/vertical_spacing.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../services/utils.dart';
 
 class NewsDetailsScreen extends StatefulWidget {
@@ -21,6 +25,9 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final color = Utils(context).getColor;
+    final newsProvider = Provider.of<NewsProvider>(context);
+    final publishedAt = ModalRoute.of(context)!.settings.arguments as String;
+    final currentNews = newsProvider.findByDate(publishedAt: publishedAt);
 
     return Scaffold(
       appBar: AppBar(
@@ -28,7 +35,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         title: Text(
-          "By Author",
+          "By ${currentNews.authorName}",
           textAlign: TextAlign.center,
           style: TextStyle(color: color),
         ),
@@ -49,7 +56,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
             child: Column(
               children: [
                 Text(
-                  "Title" * 10,
+                  currentNews.title,
                   textAlign: TextAlign.justify,
                   style: titleTextStyle,
                 ),
@@ -57,12 +64,12 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                 Row(
                   children: [
                     Text(
-                      "20/20/2015",
+                      currentNews.dateToShow,
                       style: smallTextStyle,
                     ),
                     const Spacer(),
                     Text(
-                      "readingTimeText",
+                      currentNews.readingTimeText,
                       style: smallTextStyle,
                     ),
                   ],
@@ -80,8 +87,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                   child: FancyShimmerImage(
                     boxFit: BoxFit.fill,
                     errorWidget: Image.asset("assets/images/empty_image.png"),
-                    imageUrl:
-                        "https://www.shutterstock.com/image-photo/baseball-player-stroking-dog-on-field-1877437597",
+                    imageUrl: currentNews.urlToImage,
                   ),
                 ),
               ),
@@ -108,7 +114,19 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          try {
+                            await Share.share(
+                              currentNews.url,
+                              subject: "Look what I made",
+                            );
+                          } catch (error) {
+                            GlobalMethods.errorDialog(
+                              errorMessage: "An error occured $error",
+                              context: context,
+                            );
+                          }
+                        },
                         child: Card(
                           elevation: 10,
                           shape: const CircleBorder(),
@@ -141,7 +159,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                 ),
                 const VerticalSpacing(10),
                 TextContent(
-                  label: "description" * 12,
+                  label: currentNews.description,
                   fontSize: 18,
                   fontWeight: FontWeight.normal,
                 ),
@@ -153,7 +171,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                 ),
                 const VerticalSpacing(10),
                 TextContent(
-                  label: "contents" * 12,
+                  label: currentNews.content,
                   fontSize: 18,
                   fontWeight: FontWeight.normal,
                 ),
