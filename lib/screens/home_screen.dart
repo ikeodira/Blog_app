@@ -1,5 +1,8 @@
 import 'package:blog_app/consts/vars.dart';
 import 'package:blog_app/inner_screens/search_screen.dart';
+import 'package:blog_app/providers/news_provider.dart';
+import 'package:blog_app/providers/news_provider.dart';
+import 'package:blog_app/providers/news_provider.dart';
 import 'package:blog_app/services/news_api.dart';
 import 'package:blog_app/services/utils.dart';
 import 'package:blog_app/widgets/articles_widget.dart';
@@ -47,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final Color color = Utils(context).getColor;
     Size size = Utils(context).getScreenSize;
+    final newsProvider = Provider.of<NewsProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -206,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
             // const LoadingWidget(),
             FutureBuilder<List<NewsModel>>(
-              future: NewsApiServices.getAllNews(),
+              future: newsProvider.fetchAllNews(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return newsType == NewsType.allNews
@@ -218,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const Expanded(
                     child: EmptyNewsWidget(
                       // text: "An error occured ${snapshot.error}",
-                      text: "An error occured",
+                      text: "An error occured, please try again",
                       imagePath: "assets/images/no_news.png",
                     ),
                   );
@@ -237,13 +241,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return ArticlesWidget(
-                              imageUrl: snapshot.data![index].urlToImage,
-                              dateToShow: snapshot.data![index].dateToShow,
-                              readingTime:
-                                  snapshot.data![index].readingTimeText,
-                              title: snapshot.data![index].title,
-                              url: snapshot.data![index].url,
-                            );
+                                // imageUrl: snapshot.data![index].urlToImage,
+                                // dateToShow: snapshot.data![index].dateToShow,
+                                // readingTime:
+                                //     snapshot.data![index].readingTimeText,
+                                // title: snapshot.data![index].title,
+                                // url: snapshot.data![index].url,
+                                );
                           },
                         ),
                       )
