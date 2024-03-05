@@ -210,7 +210,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
             // const LoadingWidget(),
             FutureBuilder<List<NewsModel>>(
-              future: newsProvider.fetchAllNews(),
+              future:
+                  newsProvider.fetchAllNews(pageIndex: currentPageIndex + 1),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return newsType == NewsType.allNews
@@ -219,35 +220,40 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: LoadingWidget(newsType: newsType),
                         );
                 } else if (snapshot.hasError) {
-                  return const Expanded(
+                  return Expanded(
                     child: EmptyNewsWidget(
-                      // text: "An error occured ${snapshot.error}",
-                      text: "An error occured, please try again",
+                      text: "An error occured ${snapshot.error}",
+                      // text: "An error occured, please try again",
                       imagePath: "assets/images/no_news.png",
                     ),
                   );
                 } else if (snapshot.data == null) {
-                  return const Expanded(
+                  print(snapshot.data.toString());
+                  return Expanded(
                     child: EmptyNewsWidget(
-                      // text: "No news found ${snapshot.error}",
-                      text: "No news found",
+                      text: "No news found ${snapshot.error}",
+                      // text: "No news found",
                       imagePath: "assets/images/no_news.png",
                     ),
                   );
                 }
+
                 return newsType == NewsType.allNews
                     ? Expanded(
                         child: ListView.builder(
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
-                            return ArticlesWidget(
-                                // imageUrl: snapshot.data![index].urlToImage,
-                                // dateToShow: snapshot.data![index].dateToShow,
-                                // readingTime:
-                                //     snapshot.data![index].readingTimeText,
-                                // title: snapshot.data![index].title,
-                                // url: snapshot.data![index].url,
-                                );
+                            return ChangeNotifierProvider.value(
+                              value: snapshot.data![index],
+                              child: const ArticlesWidget(
+                                  // imageUrl: snapshot.data![index].urlToImage,
+                                  // dateToShow: snapshot.data![index].dateToShow,
+                                  // readingTime:
+                                  //     snapshot.data![index].readingTimeText,
+                                  // title: snapshot.data![index].title,
+                                  // url: snapshot.data![index].url,
+                                  ),
+                            );
                           },
                         ),
                       )
