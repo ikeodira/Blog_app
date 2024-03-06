@@ -68,4 +68,34 @@ class NewsApiServices {
       throw error.toString();
     }
   }
+
+  static Future<List<NewsModel>> searchNews({required String query}) async {
+    try {
+      var uri = Uri.https(BASEURL, "v2/everything", {
+        "q": query,
+        "pageSize": "10",
+        "domains": "bbc.co.uk,techcrunch.com,engadget.com",
+        // "page": page.toString(),
+
+        // "apiKey": API_KEY,
+      });
+      var response = await http.get(uri, headers: {
+        "X-Api-key": API_KEY,
+      });
+
+      Map data = jsonDecode(response.body);
+      List newsTempList = [];
+
+      if (data['code'] != null) {
+        throw HttpException(data['code']);
+      }
+
+      for (var v in data["articles"]) {
+        newsTempList.add(v);
+      }
+      return NewsModel.newsFromSnapshot(newsTempList);
+    } catch (error) {
+      throw error.toString();
+    }
+  }
 }

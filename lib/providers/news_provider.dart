@@ -25,4 +25,9 @@ class NewsProvider extends ChangeNotifier {
     newsList = await NewsApiServices.getTopHeadlines();
     return newsList;
   }
+
+  Future<List<NewsModel>> searchNewsProvider({required String query}) async {
+    newsList = await NewsApiServices.searchNews(query: query.toLowerCase());
+    return newsList;
+  }
 }
