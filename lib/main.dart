@@ -1,6 +1,8 @@
 //Packages
+import 'package:blog_app/firebase_options.dart';
 import 'package:blog_app/inner_screens/blog_details.dart';
 import 'package:blog_app/providers/news_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +15,11 @@ import 'consts/theme_data.dart';
 //Providers
 import 'providers/theme_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
