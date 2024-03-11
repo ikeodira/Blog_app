@@ -1,6 +1,7 @@
 //Packages
 import 'package:blog_app/firebase_options.dart';
 import 'package:blog_app/inner_screens/blog_details.dart';
+import 'package:blog_app/providers/bookmarks_provider.dart';
 import 'package:blog_app/providers/news_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,10 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) {
           //Notify about theme changes
           return NewsProvider();
+        }),
+        ChangeNotifierProvider(create: (_) {
+          //Notify about theme changes
+          return BookmarksProvider();
         }),
       ],
       child:

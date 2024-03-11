@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 class NewsProvider extends ChangeNotifier {
   List<NewsModel> newsList = [];
 
-  // List<NewsModel> get getNewsList {
-  //   return newList;
-  // }
+  List<NewsModel> get getNewsList {
+    return newsList;
+  }
 
   Future<List<NewsModel>> fetchAllNews(
       {required int pageIndex, required String sortBy}) async {

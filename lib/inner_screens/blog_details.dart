@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:blog_app/providers/bookmarks_provider.dart';
 import 'package:blog_app/providers/news_provider.dart';
 import 'package:blog_app/services/global_methods.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
@@ -26,6 +27,8 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
   Widget build(BuildContext context) {
     final color = Utils(context).getColor;
     final newsProvider = Provider.of<NewsProvider>(context);
+    final bookmarksProvider = Provider.of<BookmarksProvider>(context);
+
     final publishedAt = ModalRoute.of(context)!.settings.arguments as String;
     final currentNews = newsProvider.findByDate(publishedAt: publishedAt);
 
@@ -102,7 +105,10 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          await bookmarksProvider.addToBookmark(
+                              newsModel: currentNews);
+                        },
                         child: Card(
                           elevation: 10,
                           shape: const CircleBorder(),
