@@ -43,5 +43,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# API KEYS
 /lib/firebase_options.dart
 /lib/consts/api_const.dart
